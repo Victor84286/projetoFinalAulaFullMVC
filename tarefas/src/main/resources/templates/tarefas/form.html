@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: html}">
+<head>
+    <title>Formulário de Tarefa</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h2 style="color: #333; margin-bottom: 30px;">
+                <span th:if="${tarefa.id == null}">➕ Nova Tarefa</span>
+                <span th:if="${tarefa.id != null}">✏️ Editar Tarefa</span>
+            </h2>
+
+            <style>
+                .form-container {
+                    background: #f8f9fa;
+                    padding: 30px;
+                    border-radius: 10px;
+                    border: 2px solid #e0e0e0;
+                }
+
+                .form-group {
+                    margin-bottom: 25px;
+                }
+
+                .form-group label {
+                    display: block;
+                    font-weight: bold;
+                    color: #333;
+                    margin-bottom: 8px;
+                    font-size: 1em;
+                }
+
+                .form-group input[type="text"],
+                .form-group textarea {
+                    width: 100%;
+                    padding: 12px;
+                    border: 2px solid #ddd;
+                    border-radius: 5px;
+                    font-size: 1em;
+                    font-family: inherit;
+                    transition: border-color 0.3s;
+                }
+
+                .form-group input[type="text"]:focus,
+                .form-group textarea:focus {
+                    outline: none;
+                    border-color: #667eea;
+                    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+                }
+
+                .form-group textarea {
+                    resize: vertical;
+                    min-height: 120px;
+                }
+
+                .form-group small {
+                    display: block;
+                    margin-top: 5px;
+                    color: #666;
+                    font-size: 0.9em;
+                }
+
+                .checkbox-group {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 15px;
+                    background: white;
+                    border-radius: 5px;
+                    border: 2px solid #ddd;
+                }
+
+                .checkbox-group input[type="checkbox"] {
+                    width: 20px;
+                    height: 20px;
+                    cursor: pointer;
+                }
+
+                .checkbox-group label {
+                    margin: 0 !important;
+                    cursor: pointer;
+                    font-weight: normal !important;
+                }
+
+                .form-actions {
+                    display: flex;
+                    gap: 15px;
+                    margin-top: 30px;
+                    padding-top: 20px;
+                    border-top: 2px solid #e0e0e0;
+                }
+
+                .btn {
+                    padding: 12px 30px;
+                    border: none;
+                    border-radius: 5px;
+                    font-size: 1em;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                    text-decoration: none;
+                    display: inline-block;
+                    text-align: center;
+                }
+
+                .btn:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                }
+
+                .btn-primary {
+                    background: #667eea;
+                    color: white;
+                    flex: 1;
+                }
+
+                .btn-secondary {
+                    background: #6c757d;
+                    color: white;
+                }
+
+                .required {
+                    color: #dc3545;
+                    margin-left: 3px;
+                }
+            </style>
+
+            <div class="form-container">
+                <form th:action="${tarefa.id != null ? '/tarefas/editar/' + tarefa.id : '/tarefas'}" 
+                      th:object="${tarefa}" 
+                      method="post">
+
+                    <div class="form-group">
+                        <label for="titulo">
+                            📝 Título da Tarefa <span class="required">*</span>
+                        </label>
+                        <input type="text" 
+                               id="titulo" 
+                               th:field="*{titulo}" 
+                               placeholder="Ex: Comprar material de escritório"
+                               required
+                               maxlength="255">
+                        <small>Digite um título claro e objetivo para a tarefa</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descricao">
+                            📄 Descrição
+                        </label>
+                        <textarea id="descricao" 
+                                  th:field="*{descricao}" 
+                                  placeholder="Adicione mais detalhes sobre a tarefa (opcional)..."
+                                  maxlength="1000"></textarea>
+                        <small>Opcional - Adicione informações adicionais sobre a tarefa</small>
+                    </div>
+
+                    <div class="form-group" th:if="${tarefa.id != null}">
+                        <div class="checkbox-group">
+                            <input type="checkbox" 
+                                   id="concluida" 
+                                   th:field="*{concluida}">
+                            <label for="concluida">
+                                ✅ Marcar como concluída
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <span th:if="${tarefa.id == null}">💾 Criar Tarefa</span>
+                            <span th:if="${tarefa.id != null}">💾 Salvar Alterações</span>
+                        </button>
+                        <a th:href="@{/tarefas}" class="btn btn-secondary">
+                            ❌ Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Informações adicionais para edição -->
+            <div th:if="${tarefa.id != null}" 
+                 style="margin-top: 20px; padding: 15px; background: #e7f3ff; border-left: 4px solid #2196F3; border-radius: 5px;">
+                <p style="margin: 0; color: #333;">
+                    <strong>ℹ️ Informação:</strong> Esta tarefa foi criada em 
+                    <strong th:text="${#temporals.format(tarefa.dataCriacao, 'dd/MM/yyyy')} + ' às ' + ${#temporals.format(tarefa.dataCriacao, 'HH:mm')}"></strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
