@@ -1,25 +1,32 @@
 package com.example.demo.model;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
+import jakarta.persistence.*;
 import java.time.Instant;
 
-@Document(collection = "tarefas")
+@Entity
+@Table(name = "tarefas")
 public class Tarefa {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @Column(nullable = false)
     private String titulo;
 
+    @Column(length = 1000)
     private String descricao;
 
-    @CreatedDate
+    @Column(nullable = false, updatable = false)
     private Instant dataCriacao;
 
+    @Column(nullable = false)
     private Boolean concluida = false;
+
+    @PrePersist
+    protected void onCreate() {
+        dataCriacao = Instant.now();
+    }
 
     // Constructors
     public Tarefa() {
@@ -32,11 +39,11 @@ public class Tarefa {
     }
 
     // Getters and Setters
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -75,7 +82,7 @@ public class Tarefa {
     @Override
     public String toString() {
         return "Tarefa{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", titulo='" + titulo + '\'' +
                 ", descricao='" + descricao + '\'' +
                 ", dataCriacao=" + dataCriacao +
