@@ -1,0 +1,138 @@
+.App {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #41454A 0%, #478EFF 100%);
+  padding: 20px 0;
+}
+
+/* Animações suaves */
+.animate__animated {
+  animation-duration: 0.5s;
+}
+
+.animate__fadeIn {
+  animation-name: fadeIn;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilo dos cards */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* Botões com espaçamento */
+.d-flex.gap-2 {
+  gap: 0.5rem !important;
+}
+
+/* Melhorias de responsividade */
+@media (max-width: 768px) {
+  .display-4 {
+    font-size: 2rem;
+  }
+  
+  .btn-group {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .btn-group .btn {
+    border-radius: 0.25rem !important;
+    margin-bottom: 0.25rem;
+  }
+}
+
+/* Container principal com fundo da paleta */
+.container {
+  background: #FAFCFF;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  padding: 2rem;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 3px solid #478EFF;
+}
+
+/* Scroll suave */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Estilo para checkboxes */
+.form-check-input:checked {
+  background-color: #478EFF;
+  border-color: #478EFF;
+}
+
+/* Cores personalizadas */
+:root {
+  --dark-gray: #41454A;
+  --medium-gray: #6C7279;
+  --bright-blue: #478EFF;
+  --light-blue: #CCE0FF;
+  --very-light-blue: #FAFCFF;
+}
+
+/* Spinner customizado */
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* Hover effects para botões */
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 0.9;
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Close button branco no modal */
+.modal-header .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Card hover effect */
+.card:hover {
+  box-shadow: 0 6px 20px rgba(71, 142, 255, 0.3) !important;
+}
+
+/* Estilo para labels dos formulários */
+.form-label {
+  color: #41454A;
+  font-weight: 600;
+}
+
+/* Estilo para inputs e textareas */
+.form-control {
+  background-color: #FAFCFF !important;
+  border: 2px solid #CCE0FF !important;
+  color: #41454A !important;
+}
+
+.form-control:focus {
+  background-color: #FAFCFF !important;
+  border-color: #478EFF !important;
+  box-shadow: 0 0 0 0.2rem rgba(71, 142, 255, 0.25) !important;
+}
+
+.form-control::placeholder {
+  color: #6C7279 !important;
+  opacity: 0.7;
+}

@@ -20,30 +20,31 @@ public class TarefaService {
     }
 
     // Buscar tarefa por ID
-    public Optional<Tarefa> buscarPorId(Long id) {
+    public Optional<Tarefa> buscarPorId(String id) {
         return tarefaRepository.findById(id);
     }
 
     // Salvar nova tarefa
     public Tarefa salvar(Tarefa tarefa) {
+        if (tarefa.getDataCriacao() == null) {
+            tarefa.setDataCriacao(java.time.Instant.now());
+        }
         return tarefaRepository.save(tarefa);
     }
 
     // Atualizar tarefa existente
-    public Tarefa atualizar(Long id, Tarefa tarefaAtualizada) {
-        Optional<Tarefa> tarefaExistente = tarefaRepository.findById(id);
-        if (tarefaExistente.isPresent()) {
-            Tarefa tarefa = tarefaExistente.get();
-            tarefa.setTitulo(tarefaAtualizada.getTitulo());
-            tarefa.setDescricao(tarefaAtualizada.getDescricao());
-            tarefa.setConcluida(tarefaAtualizada.getConcluida());
-            return tarefaRepository.save(tarefa);
-        }
-        return null;
+    public Optional<Tarefa> atualizar(String id, Tarefa tarefaAtualizada) {
+        return tarefaRepository.findById(id)
+                .map(tarefa -> {
+                    tarefa.setTitulo(tarefaAtualizada.getTitulo());
+                    tarefa.setDescricao(tarefaAtualizada.getDescricao());
+                    tarefa.setConcluida(tarefaAtualizada.getConcluida());
+                    return tarefaRepository.save(tarefa);
+                });
     }
 
     // Deletar tarefa
-    public boolean deletar(Long id) {
+    public boolean deletar(String id) {
         if (tarefaRepository.existsById(id)) {
             tarefaRepository.deleteById(id);
             return true;
@@ -52,14 +53,12 @@ public class TarefaService {
     }
 
     // Alternar status de conclusão
-    public Tarefa alternarConclusao(Long id) {
-        Optional<Tarefa> tarefaOpt = tarefaRepository.findById(id);
-        if (tarefaOpt.isPresent()) {
-            Tarefa tarefa = tarefaOpt.get();
-            tarefa.setConcluida(!tarefa.getConcluida());
-            return tarefaRepository.save(tarefa);
-        }
-        return null;
+    public Optional<Tarefa> alternarConclusao(String id) {
+        return tarefaRepository.findById(id)
+                .map(tarefa -> {
+                    tarefa.setConcluida(!Boolean.TRUE.equals(tarefa.getConcluida()));
+                    return tarefaRepository.save(tarefa);
+                });
     }
 
     // Listar tarefas concluídas

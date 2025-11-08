@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tarefas")
@@ -21,7 +20,7 @@ public class TarefaController {
     @GetMapping
     public ResponseEntity<List<Tarefa>> getAllTarefas(@RequestParam(required = false) String filtro) {
         List<Tarefa> tarefas;
-        
+
         if (filtro != null && !filtro.isEmpty()) {
             if (filtro.equalsIgnoreCase("concluidas")) {
                 tarefas = tarefaService.listarConcluidas();
@@ -33,16 +32,16 @@ public class TarefaController {
         } else {
             tarefas = tarefaService.listarTodas();
         }
-        
+
         return ResponseEntity.ok(tarefas);
     }
 
     // GET /api/tarefas/{id} - Buscar tarefa por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Tarefa> getTarefaById(@PathVariable Long id) {
-        Optional<Tarefa> tarefa = tarefaService.buscarPorId(id);
-        return tarefa.map(ResponseEntity::ok)
-                     .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Tarefa> getTarefaById(@PathVariable String id) {
+        return tarefaService.buscarPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // POST /api/tarefas - Criar nova tarefa
@@ -54,35 +53,27 @@ public class TarefaController {
 
     // PUT /api/tarefas/{id} - Atualizar tarefa
     @PutMapping("/{id}")
-    public ResponseEntity<Tarefa> updateTarefa(@PathVariable Long id, @RequestBody Tarefa tarefa) {
-        Tarefa tarefaAtualizada = tarefaService.atualizar(id, tarefa);
-        if (tarefaAtualizada != null) {
-            return ResponseEntity.ok(tarefaAtualizada);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Tarefa> updateTarefa(@PathVariable String id, @RequestBody Tarefa tarefa) {
+        return tarefaService.atualizar(id, tarefa)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // DELETE /api/tarefas/{id} - Deletar tarefa
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTarefa(@PathVariable Long id) {
-        boolean deletado = tarefaService.deletar(id);
-        if (deletado) {
+    public ResponseEntity<Void> deleteTarefa(@PathVariable String id) {
+        if (tarefaService.deletar(id)) {
             return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 
     // PUT /api/tarefas/{id}/concluir - Alternar conclusão da tarefa
     @PutMapping("/{id}/concluir")
-    public ResponseEntity<Tarefa> alternarConclusao(@PathVariable Long id) {
-        Tarefa tarefa = tarefaService.alternarConclusao(id);
-        if (tarefa != null) {
-            return ResponseEntity.ok(tarefa);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Tarefa> alternarConclusao(@PathVariable String id) {
+        return tarefaService.alternarConclusao(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
 
