@@ -2,6 +2,24 @@
 
 ## ⚡ Início Rápido
 
+### Pré-requisito: Banco de Dados MySQL
+
+> Garanta que um servidor MySQL 8 esteja rodando **antes** de iniciar backend/front.
+
+**Banco local instalado:** Certifique-se de que a base `tarefasdb` existe e o usuário tem acesso:
+```bash
+mysql -u root -p
+CREATE DATABASE IF NOT EXISTS tarefasdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+### Exportar variáveis de ambiente (opcional)
+Se precisar ajustar credenciais ou URL, exporte antes de subir o backend:
+```bash
+export DB_URL="jdbc:mysql://localhost:3306/tarefasdb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC"
+export DB_USERNAME="root"
+export DB_PASSWORD="root842867"
+```
+
 ### Opção 1: Script Automático (Recomendado)
 
 ```bash
@@ -11,13 +29,13 @@ cd /home/victor/Documentos/projetoFinalAulaFullMVC
 
 ### Opção 2: Manual
 
-**Terminal 1 - Backend:**
+**Terminal 1 - Backend (Spring Boot):**
 ```bash
 cd /home/victor/Documentos/projetoFinalAulaFullMVC/tarefas
 ./mvnw spring-boot:run
 ```
 
-**Terminal 2 - Frontend:**
+**Terminal 2 - Frontend (React):**
 ```bash
 cd /home/victor/Documentos/projetoFinalAulaFullMVC/frontend
 npm start
@@ -29,12 +47,13 @@ npm start
 |---------|-----|-----------|
 | **Aplicação** | http://localhost:3000 | Interface React |
 | **API REST** | http://localhost:8080/api/tarefas | Backend API |
-| **H2 Console** | http://localhost:8080/h2-console | Banco de dados |
+| **MySQL** | mysql://localhost:3306/tarefasdb | Banco de dados relacional |
 
-### Credenciais H2 Console
-- **JDBC URL**: `jdbc:h2:mem:tarefasdb`
-- **Username**: `sa`
-- **Password**: *(deixe em branco)*
+### Credenciais do MySQL
+- **Database**: `tarefasdb`
+- **Username**: defina via `DB_USERNAME`
+- **Password**: defina no arquivo `tarefas/src/main/resources/application.properties` antes de subir o backend
+- **Script opcional**: `tarefas/mysql-init.sql` para criar tabela automaticamente
 
 ## 📋 Estrutura do Projeto
 
@@ -114,7 +133,7 @@ projetoFinalAulaFullMVC/
 - ☕ Java 21
 - 🍃 Spring Boot 3.5.7
 - 💾 Spring Data JPA
-- 🗄️ H2 Database
+- 🗄️ MySQL 8
 
 ## ✨ Funcionalidades
 
@@ -143,9 +162,7 @@ API REST (Spring Boot) processa
         ↓
 Service Layer (lógica de negócio)
         ↓
-Repository (JPA) acessa banco
-        ↓
-H2 Database
+Repository (JPA) acessa banco MySQL
         ↓
 Response retorna pela cadeia
         ↓
@@ -164,6 +181,12 @@ UI atualizada!
 cd tarefas
 ./mvnw clean install
 ```
+
+### Backend não conecta no banco
+1. Verifique se o MySQL está rodando (porta 3306)
+2. Confirme usuário/senha exportando `DB_USERNAME` e `DB_PASSWORD`
+3. Ajuste a URL com `DB_URL` se estiver usando outro host/porta
+4. Veja os logs do Spring Boot para mensagens `Communications link failure`
 
 ### Frontend não conecta com Backend
 1. Verifique se backend está rodando (porta 8080)
@@ -211,17 +234,19 @@ npm install
 
 1. **Desenvolvimento**: Use dois terminais, um para cada serviço
 2. **Debug**: Console do navegador (F12) e logs do Spring Boot
-3. **Banco de Dados**: Acesse H2 Console para visualizar dados
+3. **Banco de Dados**: Monitore o MySQL via Workbench, DBeaver ou `mysql` CLI
 4. **Hot Reload**: Ambos suportam hot reload (atualização automática)
-5. **Ports**: Backend (8080), Frontend (3000), H2 Console (8080/h2-console)
+5. **Ports**: Backend (8080), Frontend (3000), MySQL (3306)
 
 ## ✅ Checklist de Instalação
 
 - [ ] Java JDK 21 instalado
 - [ ] Maven instalado (ou usar wrapper)
 - [ ] Node.js e npm instalados
+- [ ] MySQL 8 rodando (Docker ou local)
 - [ ] Dependências do frontend instaladas (`npm install`)
 - [ ] Backend compilado (`./mvnw clean install`)
+- [ ] Variáveis `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` configuradas (se diferentes do padrão)
 - [ ] Portas 8080 e 3000 disponíveis
 
 ## 🚀 Próximos Passos
@@ -231,7 +256,7 @@ npm install
 3. Teste os filtros
 4. Edite e delete tarefas
 5. Veja as estatísticas atualizando
-6. Acesse o H2 Console para ver os dados persistidos
+6. Consulte as tabelas no MySQL para validar a persistência (`SELECT * FROM tarefas;`)
 7. Abra o DevTools e veja as requisições HTTP
 
 ---
